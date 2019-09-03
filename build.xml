@@ -29,7 +29,7 @@
 	<property name="classes" value="${basedir}/classes" />
 	<property name="dist" value="${basedir}/dist" />
 	<property name="lib" value="${basedir}/lib" />
-	<property name="dist.file" value="bv-tck-glassfish-porting" />
+	<property name="dist.file" value="bv-tck-payara-porting" />
         <property name="admin.port" value="4848"/>
         <property name="admin.host" value="localhost"/>
         <!-- number of seconds to wait for the v4 admin port to be available -->
@@ -111,7 +111,7 @@
                 <java outputproperty="sigoutput" fork="true" jar="${lib}/sigtest.jar">
 			<arg value="Signaturetest"/>
                         <arg value="-Classpath"/>
-                        <arg value="${java.home}/${java.classes.for.sig.ext}${pathsep}${glassfish.home}/modules/bean-validator.jar${aix.jars}"/>
+                        <arg value="${java.home}/${java.classes.for.sig.ext}${pathsep}${glassfish.home}/modules/jersey-bean-validator.jar${aix.jars}"/>
                         <arg value="-Package"/>
                         <arg value="javax.validation"/>
                         <arg value="-FileName"/>
@@ -475,7 +475,7 @@
 		<java fork="true" jar="${lib}/sigtestdev.jar">
 			<arg value="Setup"/>
                         <arg value="-Classpath"/>
-                        <arg value="${java.home}/${java.classes.for.sig.ext}:${glassfish.home}/modules/bean-validator.jar"/>
+                        <arg value="${java.home}/${java.classes.for.sig.ext}:${glassfish.home}/modules/jersey-bean-validator.jar"/>
                         <arg value="-Package"/>
                         <arg value="javax.validation"/>
                         <arg value="-FileName"/>

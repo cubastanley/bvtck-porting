@@ -14,10 +14,11 @@
 #
 # SPDX-License-Identifier: EPL-2.0 OR GPL-2.0 WITH Classpath-exception-2.0
 
+echo Workspace Directory: ${WORKSPACE}
 
 VER="2.0"
 if ls ${WORKSPACE}/bundles/*bv-tck*.zip 1> /dev/null 2>&1; then
-  unzip -o ${WORKSPACE}/bundles/*bv-tck*.zip -d ${WORKSPACE}
+  unzip -o ${WORKSPACE}/bundles/*bv-tck-payara*.zip -d ${WORKSPACE}
 else
   echo "[ERROR] TCK bundle not found"
   exit 1
@@ -27,22 +28,23 @@ export TS_HOME=${WORKSPACE}/bv-tck-glassfish-porting
 
 #Install Glassfish
 echo "Download and install GlassFish 5.0.1 ..."
-wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O latest-glassfish.zip
+#wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O latest-glassfish.zip
 unzip -o ${WORKSPACE}/latest-glassfish.zip -d ${WORKSPACE}
 
 
 if [ -z "${BV_TCK_VERSION}" ]; then
-  BV_TCK_VERSION=2.0.5	
+  BV_TCK_VERSION=2.0.5
 fi
 
 if [ -z "${BV_TCK_BUNDLE_URL}" ]; then
   BV_TCK_BUNDLE_URL=http://download.eclipse.org/ee4j/bean-validation/beanvalidation-tck-dist-${BV_TCK_VERSION}.zip	
+
 fi
 
 #Install BV TCK dist
 echo "Download and unzip BV TCK dist ..."
 wget --progress=bar:force --no-cache $BV_TCK_BUNDLE_URL -O latest-beanvalidation-tck-dist.zip
-unzip -o ${WORKSPACE}/latest-beanvalidation-tck-dist.zip -d ${WORKSPACE}/
+unzip -o ${WORKSPACE}/../../latest-beanvalidation-tck-dist.zip -d ${WORKSPACE}/
 
 which ant
 ant -version
@@ -53,13 +55,14 @@ mkdir -p ${REPORT}/beanvalidation-$VER-sig
 mkdir -p ${REPORT}/beanvalidation-$VER
 
 #Edit Glassfish Security policy
-cat ${WORKSPACE}/docker/BV.policy >> ${WORKSPACE}/glassfish5/glassfish/domains/domain1/config/server.policy
+cat ${WORKSPACE}/docker/BV.policy >> ${WORKSPACE}/payara5/glassfish/domains/domain1/config/server.policy
 
 #Edit test properties
 sed -i "s#porting.home=.*#porting.home=${TS_HOME}#g" ${TS_HOME}/build.properties
-sed -i "s#glassfish.home=.*#glassfish.home=${WORKSPACE}/glassfish5/glassfish#g" ${TS_HOME}/build.properties
+sed -i "s#glassfish.home=.*#glassfish.home=${WORKSPACE}/payara5/glassfish#g" ${TS_HOME}/build.properties
 sed -i "s#report.dir=.*#report.dir=${REPORT}#g" ${TS_HOME}/build.properties
 sed -i "s#admin.user=.*#admin.user=admin#g" ${TS_HOME}/build.properties
+sed -i "s#jersey-bean-validator.*#validation-api.jar\${aix.jars}\"/>#g" ${TS_HOME}/build.xml
 
 #Run Tests
 cd ${TS_HOME}
