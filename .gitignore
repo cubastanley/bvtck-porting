@@ -1,0 +1,12 @@
+.settings/
+target/
+*-results.tar.gz
+/payara5/
+/dist/
+/bundles/
+/bv-tck-glassfish-porting
+/bvtck-report
+/beanvalidation-*-dist*
+.classpath
+.factorypath
+.project

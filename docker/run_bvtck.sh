@@ -28,7 +28,7 @@ export TS_HOME=${WORKSPACE}/bv-tck-glassfish-porting
 
 #Install Glassfish
 echo "Download and install GlassFish 5.0.1 ..."
-#wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O latest-glassfish.zip
+wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O  ${WORKSPACE}/latest-glassfish.zip
 unzip -o ${WORKSPACE}/latest-glassfish.zip -d ${WORKSPACE}
 
 
@@ -43,8 +43,8 @@ fi
 
 #Install BV TCK dist
 echo "Download and unzip BV TCK dist ..."
-wget --progress=bar:force --no-cache $BV_TCK_BUNDLE_URL -O latest-beanvalidation-tck-dist.zip
-unzip -o ${WORKSPACE}/../../latest-beanvalidation-tck-dist.zip -d ${WORKSPACE}/
+wget --progress=bar:force --no-cache $BV_TCK_BUNDLE_URL -O  ${WORKSPACE}/latest-beanvalidation-tck-dist.zip
+unzip -o  ${WORKSPACE}/latest-beanvalidation-tck-dist.zip -d ${WORKSPACE}/
 
 which ant
 ant -version
@@ -96,7 +96,7 @@ mvn install:install-file \
 
 #List dependencies used for testing
 cd ${TS_HOME}/glassfish-tck-runner
-mvn test dependency:tree 
+mvn test
 #Generate Reports
 echo "<pre>" > ${REPORT}/beanvalidation-$VER-sig/report.html
 cat $REPORT/bv_sig_test_results.txt >> $REPORT/beanvalidation-$VER-sig/report.html
