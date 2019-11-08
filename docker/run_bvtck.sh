@@ -62,7 +62,7 @@ sed -i "s#porting.home=.*#porting.home=${TS_HOME}#g" ${TS_HOME}/build.properties
 sed -i "s#glassfish.home=.*#glassfish.home=${WORKSPACE}/payara5/glassfish#g" ${TS_HOME}/build.properties
 sed -i "s#report.dir=.*#report.dir=${REPORT}#g" ${TS_HOME}/build.properties
 sed -i "s#admin.user=.*#admin.user=admin#g" ${TS_HOME}/build.properties
-sed -i "s#jersey-bean-validator.*#validation-api.jar\${aix.jars}\"/>#g" ${TS_HOME}/build.xml
+sed -i "s#jersey-bean-validator.*#jakarta.validation-api.jar\${aix.jars}\"/>#g" ${TS_HOME}/build.xml
 
 #Run Tests
 cd ${TS_HOME}
