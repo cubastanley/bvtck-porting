@@ -458,6 +458,8 @@
         
 	<presetdef name="mvn.test">
 		<exec executable="${maven.executable}">
+			<arg value="-s" />
+			
 			<arg value="-U" />
                         <arg value="clean" />
                         <arg value="test" />

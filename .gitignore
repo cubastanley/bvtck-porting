@@ -10,3 +10,5 @@ target/
 .classpath
 .factorypath
 .project
+bv.log
+/*.zip
