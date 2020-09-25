@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!--
 
-    Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+    Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 	Copyright (c) 2019, 2020 Payara Foundation and/or its affiliates. All rights reserved.
 
     This program and the accompanying materials are made available under the
@@ -18,14 +18,14 @@
 
 -->
 
-<project name="BV 2.0 TCK Glassfish Porting" default="dist" basedir=".">
+<project name="BV 3.0 TCK Glassfish Porting" default="dist" basedir=".">
 
 	<property environment="env" />
 	<property file="${basedir}/build.properties" />
 
 	<property name="maven.executable" value="${env.MAVEN_HOME}/bin/mvn" />
         <property name="pathsep" value="${path.separator}"/>
-        <property name="tck.version" value="2.0.0"/>
+        <property name="tck.version" value="3.0.0"/>
 	<property name="src" value="${basedir}/src" />
 	<property name="classes" value="${basedir}/classes" />
 	<property name="dist" value="${basedir}/dist" />
@@ -89,7 +89,7 @@
         
 	<target name="run.all.tests" depends="sigtest, test"/>
 
-        <target name="test" depends="config.v4, copy.settingsxml, filter.arquillian.xml">
+        <target name="test" depends="config.v4, filter.arquillian.xml">
             <if>
                 <or>
                  <os family="windows"/>
@@ -112,7 +112,7 @@
                 <java outputproperty="sigoutput" fork="true" jar="${lib}/sigtest.jar">
 			<arg value="Signaturetest"/>
                         <arg value="-Classpath"/>
-                        <arg value="${java.home}/${java.classes.for.sig.ext}${pathsep}${glassfish.home}/modules/jersey-bean-validator.jar${aix.jars}"/>
+                        <arg value="${java.home}/${java.classes.for.sig.ext}${pathsep}${glassfish.home}/modules/hibernate-validator.jar${aix.jars}"/>
                         <arg value="-Package"/>
                         <arg value="javax.validation"/>
                         <arg value="-FileName"/>
@@ -460,9 +460,11 @@
 		<exec executable="${maven.executable}">
 			<arg value="-s" />
 			
+			<arg value="--global-settings" />
+			<arg value="${porting.home}/settings.xml"/>
 			<arg value="-U" />
-                        <arg value="clean" />
-                        <arg value="test" />
+            <arg value="clean" />
+            <arg value="test" />
 		</exec>
 	</presetdef>
         
@@ -470,8 +472,10 @@
 		<exec executable="cmd">
 			<arg value="/c"/>
                         <arg value="${maven.executable}.bat"/>
-                        <arg value="-U" />
-                        <arg value="test" />
+                        	<arg value="--global-settings" />
+							<arg value="${porting.home}/settings.xml"/>
+							<arg value="-U" />
+            				<arg value="test" />
 		</exec>
 	</presetdef>
         
@@ -479,7 +483,7 @@
 		<java fork="true" jar="${lib}/sigtestdev.jar">
 			<arg value="Setup"/>
                         <arg value="-Classpath"/>
-                        <arg value="${java.home}/${java.classes.for.sig.ext}:${glassfish.home}/modules/jersey-bean-validator.jar"/>
+                        <arg value="${java.home}/${java.classes.for.sig.ext}:${glassfish.home}/modules/hibernate-validator.jar"/>
                         <arg value="-Package"/>
                         <arg value="javax.validation"/>
                         <arg value="-FileName"/>

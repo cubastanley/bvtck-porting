@@ -1,6 +1,6 @@
 #!/bin/bash -xe
 #
-# Copyright (c) 2018 Oracle and/or its affiliates. All rights reserved.
+# Copyright (c) 2018, 2020 Oracle and/or its affiliates. All rights reserved.
 # Copyright (c) 2019, 2020 Payara Foundation and/or its affiliates. All rights reserved.
 #
 # This program and the accompanying materials are made available under the
@@ -42,7 +42,7 @@ ant dist.sani
 mkdir -p ${WORKSPACE}/bundles
 if [ ! -z "$TCK_BUNDLE_BASE_URL" ]; then
   #use pre-built tck bundle from this location to run test
-  #mkdir -p ${WORKSPACE}/bundles
+  mkdir -p ${WORKSPACE}/bundles
   wget  --progress=bar:force --no-cache ${TCK_BUNDLE_BASE_URL}/${TCK_BUNDLE_FILE_NAME} -O ${WORKSPACE}/bundles/${TCK_BUNDLE_FILE_NAME}
   exit 0
 fi
