@@ -27,13 +27,12 @@ fi
 
 export TS_HOME=${WORKSPACE}/bv-tck-glassfish-porting
 
-GLASSFISH_TOP_DIR=glassfish6
+GLASSFISH_TOP_DIR=payara5
 
 #Install Glassfish
 echo "Download and install GlassFish ..."
 wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O ${WORKSPACE}/latest-glassfish.zip
 unzip -o ${WORKSPACE}/latest-glassfish.zip -d ${WORKSPACE}
-
 
 rm -fr arquillian-core-jakartaee9 
 wget https://github.com/jakartaredhat/arquillian-core/archive/jakartaee9.zip -O arquillian-core.zip
@@ -50,7 +49,6 @@ cd arquillian-container-glassfish6-master
 mvn --global-settings "${TS_HOME}/settings.xml" install
 cd $WORKSPACE
 
-
 if [ -z "${BV_TCK_VERSION}" ]; then
   BV_TCK_VERSION=3.0.0
 fi
@@ -60,9 +58,7 @@ if [ -z "${BV_TCK_BUNDLE_URL}" ]; then
 
 fi
 
-
 #Install BV TCK dist
-<<<<<<< HEAD
 echo "Download and unzip BV TCK dist ..."
 wget --progress=bar:force --no-cache $BV_TCK_BUNDLE_URL -O ${WORKSPACE}/latest-beanvalidation-tck-dist.zip
 unzip -o ${WORKSPACE}/latest-beanvalidation-tck-dist.zip -d ${WORKSPACE}/
@@ -130,7 +126,7 @@ mvn -version
 
 #List dependencies used for testing
 cd ${TS_HOME}/glassfish-tck-runner
-mvn --global-settings "${TS_HOME}/settings.xml" dependency:tree
+mvn --global-settings "${TS_HOME}/settings.xml" dependency:tree test
 
 #Generate Reports
 echo "<pre>" > ${REPORT}/beanvalidation-$VER-sig/report.html
