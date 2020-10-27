@@ -17,7 +17,7 @@
 
 echo Workspace Directory: ${WORKSPACE}
 
-VER="2.0"
+VER="3.0"
 if ls ${WORKSPACE}/bundles/*bv-tck*.zip 1> /dev/null 2>&1; then
   unzip -o ${WORKSPACE}/bundles/*bv-tck-payara*.zip -d ${WORKSPACE}
 else
@@ -28,17 +28,17 @@ fi
 export TS_HOME=${WORKSPACE}/bv-tck-glassfish-porting
 
 #Install Glassfish
-echo "Download and install GlassFish 5.0.1 ..."
+echo "Download and install GlassFish..."
 wget --progress=bar:force --no-cache $GF_BUNDLE_URL -O  ${WORKSPACE}/latest-glassfish.zip
 unzip -q -o ${WORKSPACE}/latest-glassfish.zip -d ${WORKSPACE}
 
 
 if [ -z "${BV_TCK_VERSION}" ]; then
-  BV_TCK_VERSION=2.0.5
+  BV_TCK_VERSION=3.0.0
 fi
 
 if [ -z "${BV_TCK_BUNDLE_URL}" ]; then
-  BV_TCK_BUNDLE_URL=http://download.eclipse.org/ee4j/bean-validation/beanvalidation-tck-dist-${BV_TCK_VERSION}.zip	
+  BV_TCK_BUNDLE_URL=http://download.eclipse.org/ee4j/bean-validation/3.0/beanvalidation-tck-dist-${BV_TCK_VERSION}.zip	
 
 fi
 
@@ -73,21 +73,28 @@ ant test
 which mvn
 mvn -version
 
-GROUP_ID=org.hibernate.beanvalidation.tck
+GROUP_ID=jakarta.validation
 ARTIFACT_ID=beanvalidation-tck-tests 
 BEANVALIDATION_TCK_DIST=beanvalidation-tck-dist
 
 cp ${WORKSPACE}/${BEANVALIDATION_TCK_DIST}-${BV_TCK_VERSION}/artifacts/tck-tests.xml \
 	${WORKSPACE}/${BEANVALIDATION_TCK_DIST}-${BV_TCK_VERSION}/artifacts/beanvalidation-tck-tests-${BV_TCK_VERSION}-tck-tests.xml
 
-mvn install:install-file \
+mvn --global-settings "${PORTING}/settings.xml" org.apache.maven.plugins:maven-install-plugin:3.0.0-M1:install-file \
+-Dfile=${WORKSPACE}/${BEANVALIDATION_TCK_DIST}-${BV_TCK_VERSION}/src/pom.xml \
+-DgroupId=${GROUP_ID} \
+-DartifactId=beanvalidation-tck-parent \
+-Dversion=${BV_TCK_VERSION} \
+-Dpackaging=pom
+
+mvn --global-settings "${PORTING}/settings.xml" install:install-file \
 -Dfile=${WORKSPACE}/${BEANVALIDATION_TCK_DIST}-${BV_TCK_VERSION}/artifacts/beanvalidation-tck-tests-${BV_TCK_VERSION}.jar \
 -DgroupId=${GROUP_ID} \
 -DartifactId=${ARTIFACT_ID} \
 -Dversion=${BV_TCK_VERSION} \
 -Dpackaging=jar
 
-mvn install:install-file \
+mvn --global-settings "${PORTING}/settings.xml" install:install-file \
 -Dfile=${WORKSPACE}/${BEANVALIDATION_TCK_DIST}-${BV_TCK_VERSION}/artifacts/beanvalidation-tck-tests-${BV_TCK_VERSION}-tck-tests.xml \
 -DgroupId=${GROUP_ID} \
 -DartifactId=${ARTIFACT_ID} \
@@ -97,7 +104,8 @@ mvn install:install-file \
 
 #List dependencies used for testing
 cd ${TS_HOME}/glassfish-tck-runner
-mvn test
+mvn --global-settings "${PORTING}/settings.xml" test
+
 #Generate Reports
 echo "<pre>" > ${REPORT}/beanvalidation-$VER-sig/report.html
 cat $REPORT/bv_sig_test_results.txt >> $REPORT/beanvalidation-$VER-sig/report.html
@@ -115,7 +123,7 @@ sed -i 's/name=\"TestSuite\"/name="beanvalidation-2.0"/g' ${REPORT}/beanvalidati
 
 # Create Junit formated file for sigtests
 echo '<?xml version="1.0" encoding="UTF-8" ?>' > $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
-echo '<testsuite tests="TOTAL" failures="FAILED" name="beanvalidation-2.0.0-sig" time="0.2" errors="0" skipped="0">' >> $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
+echo '<testsuite tests="TOTAL" failures="FAILED" name="beanvalidation-3.0.0-sig" time="0.2" errors="0" skipped="0">' >> $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
 echo '<testcase classname="BVSigTest" name="beanvalidation" time="0.2">' >> $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
 echo '  <system-out>' >> $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
 cat $REPORT/bv_sig_test_results.txt >> $REPORT/beanvalidation-$VER-sig/beanvalidation-$VER-sig-junit-report.xml
